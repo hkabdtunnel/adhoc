@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+
+<title>
+Marksheet
+</title>
+
+</head>
+
+<body>
+<h3> 香隧正臭西 </h3>
+<script>	
+	if(window.XMLHttpRequest){ //for IE7+, firefox and opera
+		xhr=new XMLHttpRequest();
+		}
+	else{ //for IE5 and 6
+		xhr=new ActiveXObject("Microsoft.xhr");
+	}
+	xhr.open("GET","http://resource.data.one.gov.hk/td/journeytime.xml",false);
+	xhr.send();
+	xmlDoc=xhr.responseXML;
+	document.write("<table border='1' width='50%' style='font-size:35px;'>");
+	
+	// this line will write table tag on html document
+	
+	document.write("<tr><th>去邊</th><th>時間</th></tr>");
+	x = xmlDoc.getElementsByTagName("LOCATION_ID");
+	
+	// This line will store array of object in variable x
+	
+	for (i=0;i<x.length;i++) {
+		if (xmlDoc.getElementsByTagName("LOCATION_ID")[i].childNodes[0].nodeValue == "H2") {
+			document.write("<tr><td>");
+			document.write(xmlDoc.getElementsByTagName("DESTINATION_ID")[i].childNodes[0].nodeValue);
+			document.write("</td><td>");
+			switch (xmlDoc.getElementsByTagName("COLOUR_ID")[i].childNodes[0].nodeValue) {
+				case "3":
+					document.write(xmlDoc.getElementsByTagName("JOURNEY_DATA")[i].childNodes[0].nodeValue.fontcolor("green"));
+					break;
+				case "2":
+					document.write(xmlDoc.getElementsByTagName("JOURNEY_DATA")[i].childNodes[0].nodeValue.fontcolor("yellow"));
+					break;
+				default: //default is case 1 red
+					document.write(xmlDoc.getElementsByTagName("JOURNEY_DATA")[i].childNodes[0].nodeValue.fontcolor("red"));
+					break;
+				}
+			document.write("</td>");
+			}
+		}
+	document.write("</table>");
+</script>
+</body>
+</html>
