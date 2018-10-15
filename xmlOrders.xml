@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmlOrders>
-  <shipto>
-    <name>Jane Doe</name>
-    <address>253 Dale St., Apt. 15</address>
-    <city>Saint Paul</city>
-    <state>MN</state>
-    <zip>55103</zip>
-  </shipto>
   <item>
     <number>304058674035</number>
     <date>01-13-2017</date>
