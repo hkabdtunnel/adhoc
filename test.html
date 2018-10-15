@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<meta charset="utf-8"/>
+<title>TESTING</title>
+
+<script>
+(function(window, document, undefined){
+    jtis_journey_list = {
+        init: function(){
+            var self = this;
+            self.getData();
+        },
+        getData: function(){
+            var self = this,
+                url = "https://hkabdtunnel.github.io/adhoc/journeytime.xml";
+
+            var createCORSRequest = function(method, url) {
+                var xhr = new XMLHttpRequest();
+                if ("withCredentials" in xhr) {
+
+                    // Check if the XMLHttpRequest object has a "withCredentials" property.
+                    // "withCredentials" only exists on XMLHTTPRequest2 objects.
+                    xhr.open(method, url, true);
+
+                } else if (typeof XDomainRequest != "undefined") {
+
+                    // Otherwise, check if XDomainRequest.
+                    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+                    xhr = new XDomainRequest();
+                    xhr.open(method, url);
+
+                } else {
+
+                    // Otherwise, CORS is not supported by the browser.
+                    xhr = null;
+
+                }
+                return xhr;
+                }
+
+                var xhr = createCORSRequest('GET', url);
+                if (!xhr) {
+                throw new Error('CORS not supported');
+                }
+
+                xhr.onload = function() {
+                var xml = xhr.responseText,
+                    parser = new DOMParser(),
+                    xmlDoc = parser.parseFromString(xml,"text/xml");
+        
+                // process the response.
+                self.setData(xmlDoc);
+                jtis_journey_list.xmlDoc = xmlDoc;
+                
+                };
+
+                xhr.onerror = function() {
+                console.log('There was an error!');
+                };
+
+                xhr.send();
+  
+        },
+        emptyTable: function(){
+           var tbdy = document.getElementsByTagName('tbody')[0];
+           tbdy.innerHTML = '';
+        },
+        displayData: function(obj){
+
+            var tbdy = document.getElementsByTagName('tbody')[0],
+
+                row = tbdy.insertRow(0),
+
+                aaa = row.insertCell(0),
+                bbb = row.insertCell(1),
+                ccc = row.insertCell(2),
+                ddd = row.insertCell(3),
+                eee = row.insertCell(4);
+
+                aaa.innerHTML = obj.getElementsByTagName('LOCATION_ID')[0].childNodes[0].nodeValue;
+                bbb.innerHTML = obj.getElementsByTagName('DESTINATION_ID')[0].childNodes[0].nodeValue;
+                ccc.innerHTML = obj.getElementsByTagName('JOURNEY_TYPE')[0].childNodes[0].nodeValue;
+                ddd.innerHTML = obj.getElementsByTagName('JOURNEY_DATA')[0].childNodes[0].nodeValue;
+                eee.innerHTML = obj.getElementsByTagName('COLOUR_ID')[0].childNodes[0].nodeValue;
+
+        },
+		setData: function(data){
+            var self = this, data = data || jtis_journey_list.xmlDoc,
+                dataObj = data.getElementsByTagName('jtis_journey_time');
+
+            self.emptyTable();
+
+           for (var property in dataObj) {
+                if (dataObj.hasOwnProperty(property)) {
+                    self.displayData(dataObj[property]);
+                }
+            }
+        },
+
+    };
+    
+    
+    (function(){
+        jtis_journey_list.init();
+    }());
+
+}(window, document));
+</script>
+
+</head>
+<body>
+<main>
+		<table id="orderTable">
+			<thead>
+				<tr>
+					<th>place</th>
+					<th>dest</th>
+					<th>jtype</th>
+					<th>jtime</th>
+					<th>colour</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+</main>
+</body>
+
+</html>
